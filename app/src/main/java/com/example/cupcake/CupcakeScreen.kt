@@ -1,6 +1,8 @@
 package com.example.cupcake
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -106,7 +108,12 @@ fun CupcakeApp(
                     onNextButtonClicked = {
                         navController.navigate(CupcakeScreen.Pickup.name)
                     },
-                    onCancelButtonClicked = { cancelOrderAndNavigateToStart(viewModel, navController)},
+                    onCancelButtonClicked = {
+                        cancelOrderAndNavigateToStart(
+                            viewModel,
+                            navController
+                        )
+                    },
                     modifier = Modifier.fillMaxHeight()
 
                 )
@@ -121,7 +128,12 @@ fun CupcakeApp(
                     onNextButtonClicked = {
                         navController.navigate(CupcakeScreen.Summary.name)
                     },
-                    onCancelButtonClicked = { cancelOrderAndNavigateToStart(viewModel, navController) },
+                    onCancelButtonClicked = {
+                        cancelOrderAndNavigateToStart(
+                            viewModel,
+                            navController
+                        )
+                    },
                     modifier = Modifier.fillMaxHeight()
                 )
             }
@@ -130,9 +142,14 @@ fun CupcakeApp(
                 val context = LocalContext.current
                 OrderSummaryScreen(
                     orderUiState = uiState,
-                    onCancelButtonClicked = { cancelOrderAndNavigateToStart(viewModel, navController) },
+                    onCancelButtonClicked = {
+                        cancelOrderAndNavigateToStart(
+                            viewModel,
+                            navController
+                        )
+                    },
                     onSendButtonClicked = { subject: String, summary: String ->
-
+                        shareOrder(context, subject, summary)
                     },
                     modifier = Modifier.fillMaxHeight()
                 )
@@ -144,11 +161,26 @@ fun CupcakeApp(
 }
 
 private fun cancelOrderAndNavigateToStart(
-    viewModel:OrderViewModel,
-    navController:NavHostController
-){
+    viewModel: OrderViewModel,
+    navController: NavHostController
+) {
     viewModel.resetOrder()
     navController.popBackStack(CupcakeScreen.Start.name, inclusive = false)
 
 }
+
+private fun shareOrder(context: Context, subject: String, summary: String) {
+    val intent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(Intent.EXTRA_SUBJECT, subject)
+        putExtra(Intent.EXTRA_TEXT, summary)
+    }
+    context.startActivity(
+        Intent.createChooser(
+            intent,
+            context.getString(R.string.new_cupcake_order)
+        )
+    )
+}
+
 

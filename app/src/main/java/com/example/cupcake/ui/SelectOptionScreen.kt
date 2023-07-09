@@ -50,18 +50,18 @@ import com.example.cupcake.ui.components.FormattedPriceLabel
 fun SelectOptionScreen(
     subtotal: String,
     options: List<String>,
+    modifier: Modifier = Modifier,
     onSelectionChanged: (String) -> Unit = {},
-    onCancelButtonClicked:()->Unit = {},
-    onNextButtonClicked:()->Unit = {},
-    modifier: Modifier = Modifier
-){
+    onCancelButtonClicked: () -> Unit = {},
+    onNextButtonClicked: () -> Unit = {}
+) {
     var selectedValue by rememberSaveable { mutableStateOf("") }
 
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column(modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))){
+        Column(modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium))) {
             options.forEach { item ->
                 Row(
                     modifier = Modifier.selectable(
@@ -72,7 +72,7 @@ fun SelectOptionScreen(
                         }
                     ),
                     verticalAlignment = Alignment.CenterVertically
-                ){
+                ) {
                     RadioButton(
                         selected = selectedValue == item,
                         onClick = {
@@ -104,7 +104,7 @@ fun SelectOptionScreen(
                 .weight(1f, false),
             horizontalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium)),
             verticalAlignment = Alignment.Bottom
-        ){
+        ) {
             OutlinedButton(modifier = Modifier.weight(1f), onClick = onCancelButtonClicked) {
                 Text(stringResource(R.string.cancel))
             }
@@ -123,7 +123,7 @@ fun SelectOptionScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun SelectOptionPreview(){
+fun SelectOptionPreview() {
     SelectOptionScreen(
         subtotal = "299.99",
         options = listOf("Option 1", "Option 2", "Option 3", "Option 4"),
